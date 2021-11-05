@@ -58,17 +58,54 @@
 </div>
 </details>
 
+![OSI_7_Layer](OSI_7_layer.assets/OSI_7_Layer.png)
 
 
-|                         계층                          |   데이터 단위    |                프로토콜 예제                |
-| :---------------------------------------------------: | :--------------: | :-----------------------------------------: |
-|          7. 응용 계층(**Application Layer**)          |     message      |            HTTP, SMTP, FTP, SIP             |
-|         6. 표현 계층(**Presentation Layer**)          |     message      |                 ASCII, MPEG                 |
-|            5. 세션 계층(**Session Layer**)            |     message      |                NetBIOS, TLS                 |
-|           4. 전송 계층(**Transport Layer**)           |     segment      |               TCP, UDP, SCTP                |
-|          3. 네트워크 계층(**Network Layer**)          | datagram, packet |           IP, ICMP, ARP, RIP, BGP           |
-| 2. [데이터 링크 계층](#datalink)(**Data Link Layer**) |      frame       | PPP, Ethernet, Token ring, IEE 802.11(Wifi) |
-|     1. [물리 계층](#physical)(**Physical Layer**)     |       bit        |                  DSL, ISDN                  |
+
+### 7. 응용 계층(Application Layer)
+
+- OSI 7계층 중 최상위 계층이며, **사용자가 직접 눈으로 보고 실제 작업을 하는 계층**이다. 웹 브라우저, HTTP 등 사용자와 직접적으로 상호작용하는 모든 응용 프로그램들이 속한다.
+
+
+
+### 6. 표현 계층(Presetation Layer)
+
+- 표현 계층은 **데이터의 Format(형식)을 정의**한다. 일반적으로 응용 프로그램 형식과 네트워크 형식 간의 변환을 수행한다. 즉, 서로 다른 환경의 컴퓨터와 Application들이 데이터를 서로 이해할 수 있도록 도와주는 계층이다.
+
+- JPEG, GIF(그래픽 포맷) / MPEG, QUICKTIME(동영상 포맷) / MIDI(음악 포맷) / ASCII, EBCDIC(텍스트 포맷) 등을 지정한다.
+
+- **데이터의 압축, 암호화 기능**도 수행한다.
+
+
+
+### 5. 세션 계층(Session Layer)
+
+- 2개의 기기, 컴퓨터 또는 서버 간의 통신을 위해서는 **세션(Session)**을 만들어야 하는데 이 작업이 여기서 처리된다. 네트워크 연결을 설립(Establishment), 제어와 운영(Manage and Control), 연결의 종료(Terminate)를 책임진다. 
+
+- 데이터 송신 시, 효율적인 세션 관리를 위해 표현 계층으로부터 받은 데이터를 짧은 단위로 나눈 후 전송 계층으로 내려 보낸다.
+
+- OS(Operating Systems)가 이 계층에 속한다.
+
+
+
+### 4. 전송 계층(Transport Layer)
+
+- 전송 계층은 양 끝단(End to end)의 사용자들이 신뢰성 있는 데이터를 주고 받을 수 있도록 해 주어, 상위 계층들이 데이터 전달의 유효성이나 효율성을 생각하지 않도록 해준다.
+- 가장 잘 알려진 전송 계층의 예는 TCP, UDP 등이 있다.
+
+
+
+### 3. 네트워크 계층(Network Layer)
+
+- 네트워크 계층의 가장 중요한 일은 패킷을 목적지까지 가장 빠른 길로 전송하는 역할이다. 이 계층에서는 에러가 생기든 말든 일단 보내는 것에 집중한다. 에러가 나면 상위 계층에서 해결해주기 때문에 에러에 신경쓰지 않는다.
+
+
+
+### 2. 데이터 링크 계층(Data Link Layer)
+
+- 데이터 링크 계층은 포인트 투 포인트(Point to point) 간 신뢰성있는 전송을 보장하기 위한 계층이다.
+- 주소 값은 물리적으로 할당 받는데, 이는 네트워크 카드(랜카드)가 만들어질 때부터 할당된 맥 주소(MAC Address)를 사용한다.
+- 네트워크 위 개체들 간 데이터를 전달하고, 물리 계층에서 발생할 수 있는 오류를 찾아내고, 수정하는데 필요한 수단을 제공한다.
 
 
 
