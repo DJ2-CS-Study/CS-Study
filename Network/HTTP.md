@@ -55,7 +55,7 @@ HTTP는 **H**yper **T**ext **T**ransfer **P**rotocol의 약자입니다. HTTP는
 
 |                      프로토콜 확인 방법                      |
 | :----------------------------------------------------------: |
-| <img src="./HTTP.assets./protocol.gif" style="width: 1000px;"> |
+| <img src="./HTTP.assets/protocol.gif" style="width: 1000px;"> |
 
 
 
