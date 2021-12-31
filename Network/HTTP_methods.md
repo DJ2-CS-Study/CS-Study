@@ -63,8 +63,8 @@
 
 |              PUT은 덮어쓰기!               |
 | :----------------------------------------: |
-| <img src="./HTTP_methods.assets/put1.png"> |
-| <img src="./HTTP_methods.assets/put2.png"> |
+| <img src="./HTTP_methods.assets/put1.PNG"> |
+| <img src="./HTTP_methods.assets/put2.PNG"> |
 
 ### PATCH
 
@@ -74,8 +74,8 @@
 
 |               PATCH는 부분변경               |
 | :------------------------------------------: |
-| <img src="./HTTP_methods.assets/patch1.png"> |
-| <img src="./HTTP_methods.assets/patch2.png"> |
+| <img src="./HTTP_methods.assets/patch1.PNG"> |
+| <img src="./HTTP_methods.assets/patch2.PNG"> |
 
 ### DELETE
 
@@ -85,7 +85,7 @@
 
 ## HTTP 메서드의 속성
 
-<img src="./HTTP_methods.assets/http_table.png" width="800px">
+<img src="./HTTP_methods.assets/http_table.PNG" width="800px">
 
 
 
