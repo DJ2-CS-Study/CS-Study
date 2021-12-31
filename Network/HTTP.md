@@ -2,7 +2,7 @@
 
 [TOC]
 
-## 모든 것이 HTTP
+## HTTP 개요
 
 ### HTTP의 시작
 
@@ -59,9 +59,9 @@ HTTP는 **H**yper **T**ext **T**ransfer **P**rotocol의 약자입니다. HTTP는
 
 
 
-### HTTP 특징
+## HTTP 특징
 
-#### 클라이언트 - 서버 구조
+### 클라이언트 - 서버 구조
 
 - 클라이언트는 서버에 요청을 보내고, 응답을 기다립니다.
 - 서버는 요청에 대한 결과를 만들어서 응답합니다.
@@ -69,7 +69,7 @@ HTTP는 **H**yper **T**ext **T**ransfer **P**rotocol의 약자입니다. HTTP는
 
 
 
-#### 무상태 프로토콜(Stateless)
+### 무상태 프로토콜(Stateless)
 
 HTTP는 서버가 클라이언트의 상태를 보존하지 않기 때문에 무상태 프로토콜이라고 부릅니다. 무상태 프로토콜은 아래와 같은 장단점이 있는데 왜 이러한 장단점이 생기는지 알아보겠습니다.
 
@@ -78,7 +78,7 @@ HTTP는 서버가 클라이언트의 상태를 보존하지 않기 때문에 무
 
 
 
-##### Stateful VS Stateless
+#### Stateful VS Stateless
 
 우선 Stateful(상태 유지)와 Stateless(무상태)의 차이를 이해해야 합니다. 클라이언트 - 서버 간의 요청을 노트북을 구매하려는 고객(클라이언트)과 점원(서버)로 비유해보겠습니다.
 
@@ -120,9 +120,134 @@ HTTP는 서버가 클라이언트의 상태를 보존하지 않기 때문에 무
 
 
 
-#### 비연결성(Connectless)
+### 비연결성(Connectless)
 
-#### HTTP 메시지
+>  HTTP의 또다른 특징 중 하나는 비연결성(Connectless)입니다. 그림을 보면서 왜 연결을 유지하지 않도록 했는지 이해해봅시다.
 
-#### 단순함, 확장 가능
+연결을 유지하는 모델은 요청을 주고 받지 않는 상황에서도 연결을 유지합니다. 그만큼 서버 자원을 더 소모하게 되는 것이죠. 서버 자원은 한정되어 있으니 그만큼 처리할 수 있는 최대 요청 수가 줄어들게 됩니다.
 
+|                     연결을 유지하는 모델                     |
+| :----------------------------------------------------------: |
+| <img src="./HTTP.assets/connectless2.png" style="width: 1000px;"> |
+
+반면 연결을 유지하지 않는 모델은 요청-응답을 주고받으면 연결이 종료됩니다. 각 요청마다 최소한의 자원만 사용하는 것이죠.
+
+요청과 응답은 일반적으로 초 단위 이하의 빠른 속도로 이루어집니다. 때문에 수천명이 이용하는 사이트라고 하더라도 같은 요청을 정확히 같은 시간에 보내는 수는 얼마 되지 않습니다.
+
+연결을 유지하지 않음으로써 서버 자원을 훨씬 효율적으로 사용하고 더 많은 클라이언트의 요청을 처리할 수 있는 것입니다.
+
+|                  연결을 유지하지 않는 모델                   |
+| :----------------------------------------------------------: |
+| <img src="./HTTP.assets/connectless1.png" style="width: 1000px;"> |
+
+#### 비 연결성 정리
+
+- HTTP는 기본적으로 연결을 유지하지 않습니다.
+- 일반적으로 초 단위 이하의 빠른 속도로 응답합니다.
+- 1시간 동안 수천명이 서비스를 사용해도 실제 서버에서 처리하는 요청은 수십개 이하로 적습니다.
+- 서버 자원을 매우 효율적으로 사용할 수 있습니다.
+
+#### 한계
+
+- 매번 TCP/IP 연결을 새로 맺어야 합니다. (3 way handshake 시간 추가)
+- 요청 시 HTML, JS, CSS, Image 등 수 많은 자원을 함께 다운로드 해야 합니다.
+
+|                 HTTP 초기 - 연결, 종료 낭비                  |
+| :----------------------------------------------------------: |
+| <img src="./HTTP.assets/persistent1.png" style="width: 1000px;"> |
+
+#### 극복
+
+- 지금은 HTTP 지속 연결(Persistent Connections)로 문제 해결
+- HTTP/2, HTTP/3에서는 연결 시간까지 최적화
+
+|                        HTTP 지속 연결                        |
+| :----------------------------------------------------------: |
+| <img src="./HTTP.assets/persistent2.png" style="width: 1000px;"> |
+
+
+
+### HTTP 메시지
+
+HTTP 메시지는 다음과 같은 구조로 이루어져 있습니다.
+
+|                       HTTP 메시지 구조                       |
+| :----------------------------------------------------------: |
+| <img src="./HTTP.assets/message1.png" style="width: 300px;"> |
+
+[공식 문서](https://datatracker.ietf.org/doc/html/rfc7230#section-3)에는 다음과 같이 나와 있습니다.
+
+```
+HTTP-message   = start-line
+                 *( header-field CRLF )
+                 CRLF
+                 [ message-body ]
+```
+
+HTTP 메시지는 요청 메시지와 응답 메시지의 내용이 조금 다릅니다. 하지만 큰 구조는 동일하다는 것!
+
+그리고 그림에는 나와있지 않지만 요청 메시지도 body 본문을 가질 수 있습니다.(ex. POST 요청)
+
+|                         요청 메시지                          |                         응답 메시지                          |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+| <img src="./HTTP.assets/message2.png" style="width: 300px;"> | <img src="./HTTP.assets/message3.png" style="width: 300px;"> |
+
+
+
+#### 시작 라인(start-line)
+
+##### 요청 메시지
+
+> start-line = **request-line** / status-line
+
+start-line은 request-line과 status-line 두 가지가 있습니다. 요청 메시지의 start-line은 request-line입니다 
+
+```
+request-line = method SP request-target SP HTTP-version CRLF
+```
+
+- `method` : HTTP 메서드(ex. GET)
+- `request-target` : 요청 대상(ex. `/search?=hello&hi=ko`)
+  - `absolute-path[?query]` (`절대경로[?쿼리]`)
+  - 절대경로 = `/` 로 시작하는 경로
+- `HTTP-version` : HTTP 버전(ex. `HTTP/1.1`)
+- `SP` : 공백
+- `CRLF` : 엔터
+
+##### 응답 메시지
+
+> start-line = request-line / **status-line**
+
+응답 메시지의 start-line은 status-line입니다.
+
+```
+status-line = HTTP-verison SP status-code SP reason-phrase CRLF
+```
+
+- `HTTP-version` : HTTP 버전(ex. `HTTP/1.1`)
+- `status-code` : 상태 코드
+- `reason-pharse` : 사람이 이해할 수 있는 짧은 상태 코드 설명 글
+
+
+
+#### 헤더(header)
+
+HTTP 헤더에는 HTTP 전송에 필요한 모든 부가정보가 들어갑니다. 메시지 바디의 타입, 메시지 바디의 크기, 압축, 인증, 요청 클라이언트(브라우저 정보), 서버 애플리케이션 정보, 캐시 관리 정보 등등등..
+
+메시지 바디에 들어가는 내용 외에 모든 메타데이터가 들어간다고 봐도 무방합니다. 그만큼 표준 헤더가 정말 정말 많습니다. [여기](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields)에서 표준 헤더 목록을 볼 수 있습니다.
+
+필요 시 임의의 헤더를 추가할 수도 있습니다. (ex. `helloworld: hihi`)
+
+```
+header-field = field-name ":" OWS field-value OWS
+```
+
+- `field-name` : 헤더 필드 이름, 대소문자 구분 없음 (ex. `Host`, `Content-Type`)
+- `field-value` : 헤더 필드 값, 대소문자 구분 (ex. `www.google.com`)
+- `OWS` : 띄어쓰기 허용
+
+
+
+#### 메시지 바디
+
+실제 전송할 데이터가 들어가있습니다. HTML 문서, 이미지, 영상, JSON 등등 byte로 표현할 수 있는 모든 데이터 전송이 가능합니다.
