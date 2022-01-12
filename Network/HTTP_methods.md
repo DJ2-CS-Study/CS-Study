@@ -17,7 +17,7 @@
 ### 기타 메서드
 
 - HEAD: GET과 동일하지만 메시지 부분을 제외하고 상태 줄과 헤더만 반환
-- OPTIONS: 대상 리로스에 대한 통신 가능 옵션(메서드)을 설명(주로 CORS에서 사용)
+- OPTIONS: 대상 리로스에 대한 통신 가능 옵션(메서드)을 설명 (주로 CORS에서 사용)
 - CONNECT: 대상 자원으로 식별되는 서버에 대한 터널을 설정
 - TRACE: 대상 리소스에 대한 경로를 따라 메시지 루프백 테스트를 수행
 
@@ -92,7 +92,7 @@
 ### 안전(Safe Methods)
 
 - 호출해도 리소스를 변경하지 않는다.
-- GET, POST, OPTIONS, TRACE
+- GET, HEAD, OPTIONS, TRACE
 
 ---
 
@@ -138,3 +138,108 @@ A: 멱등은 외부 요인으로 리소스가 변경되는 것 까지는 고려�
 - GET, HEAD, POST, PATCH 캐시 가능
 - 실제로는 GET, HEAD 정도만 캐시로 사용
   - POST, PATCH는 본문 내용까지 캐시 키로 고려해야 하는데, 구현이 쉽지 않음
+
+
+
+## HTTP 메서드의 활용
+
+### HTML Form을 통한 데이터 전송
+
+- **GET, POST만 지원**
+
+#### Content-Type: application/x-www-form-urlencoded
+
+- form의 내용을 메시지 바디를 통해서 전송(key=value, 쿼리 파라미터와 같은 형식)
+- 전송 데이터를 url encoding 처리
+  - ex) abc김 => abc%EA%b9%80
+
+|                    HTML Form - POST 요청                     |
+| :----------------------------------------------------------: |
+| <img src="HTTP_methods.assets/form1.PNG" style="width:800px"> |
+
+#### Content-Type: mulitpart/form-data
+
+- 파일 업로드 같은 바이너리 데이터 전송 시 사용
+- 다른 종류의 여러 파일과 폼의 내요 함께 전송 가능(그래서 이름이 multipart)
+
+|                    HTML Form - 파일 전송                     |
+| :----------------------------------------------------------: |
+| <img src="HTTP_methods.assets/form2.PNG" style="width:800px"> |
+
+#### Django 예제
+
+- 게시물 Update Form
+- HTML Form은 GET, POST 메서드만 사용 가능하기 때문에 PUT 메서드가 아닌 POST 메서드 사용
+- 파일 전송을 위해 `enctype="multipart/form-data"` HTML attribute를 작성 => Content-Type 헤더를 multipart/form-data로 설정
+
+|                     Django template 예시                     |
+| :----------------------------------------------------------: |
+| <img src="HTTP_methods.assets/django1.PNG" style="width:800px"> |
+
+
+
+### HTTP API를 통한 데이터 전송
+
+- 서버 to 서버(백엔드 시스템 통신)
+- 앱 클라이언트(아이폰, 안드로이드)
+- 웹 클라이언트
+  - HTML에서 Form 전송 대신 자바스크립트를 통한 통신에 사용(AJAX)
+  - 예) React, Vue.js 같은 웹 클라이언트와 API 통신
+- POST, PUT, PATCH 등의 메서드를 사용해 메시지 바디에 데이터를 담아 전송
+- GET: 조회 시 사용, 필요한 데이터는 쿼리 파라미터 사용
+- Content-Type: application/json을 주로 사용 (사실상 표준)
+  - TEXT, XML, JSON 등등
+
+|                           HTTP API                           |
+| :----------------------------------------------------------: |
+| <img src="HTTP_methods.assets/api1.PNG" style="width:800px"> |
+
+#### AJAX로 파일을 전달해야 한다면?
+
+> [FormData](https://2ham-s.tistory.com/307) 사용
+
+1. `new FormData()` 로 FormData 객체를 생성
+2. 전달할 내용, 파일을 FormData 객체에 담기
+3. 제출 버튼 클릭 시 발생하는 submit 이벤트를 `preventDefault`로 멈추고 데이터 전송
+   1. **FormData 역시 HTML Form처럼 GET, POST 메서드만 사용 가능**
+   2. 데이터 전송 시 Content-Type: multipart/form-data 설정
+
+
+
+##### Vue.js 프로필 업데이트 메서드 예제(이미지 변경 포함)
+
+```javascript
+// 업데이트 요청
+    updateUser: function () {
+      // 이미지 formdata에 담기
+      const userData = new FormData()
+      // 이름을 django 모델의 필드명과 동일하게 맞춰줘야 함
+      if (this.selectedImage) {
+        userData.append('profile_image', this.selectedImage, this.selectedImage.name)
+      }
+      userData.append('username', this.inputUsername)
+      userData.append('email', this.dataSet.email)
+      userData.append('name', this.dataSet.name)
+      userData.append('is_private', this.dataSet.isPrivate)
+      // api 요청
+      axios({
+        // FormData 역시 get, post 메서드만 사용 가능
+        method: 'post',
+        url: `${process.env.VUE_APP_SERVER_URL}/accounts/update/${this.username}/`,
+        data: userData,
+        headers: {
+          ...this.setToken(),
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+        .then(() => {
+          const updateModalCloseBtn = document.querySelector('#updateModalCloseBtn')
+          updateModalCloseBtn.click()
+          this.login()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+```
+
